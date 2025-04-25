@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -13,7 +14,10 @@ interface ScriptLibraryProps {
 
 const ScriptLibrary: React.FC<ScriptLibraryProps> = ({ onSelectScript }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(['System & Network Administration']);
+  // Initialize all categories as expanded for better visibility
+  const [expandedCategories, setExpandedCategories] = useState<string[]>(
+    SCRIPT_CATEGORIES.map(category => category.id)
+  );
   
   const toggleCategory = (categoryId: string) => {
     setExpandedCategories(prev => 
