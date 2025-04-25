@@ -55,7 +55,7 @@ const Index = () => {
       <Header />
       
       <main className="flex-1 container py-8">
-        <h2 className="text-3xl font-bold mb-8 text-center">DevOps Bash Script Generator</h2>
+        <h2 className="text-3xl font-bold mb-8 text-center">Bash Buddy Builder</h2>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-1">
