@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -6,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Search, FolderOpen } from 'lucide-react';
 import { ScriptCategory, BoilerplateScript } from '@/types/scripts';
-import { SCRIPT_CATEGORIES } from '@/data/scriptData';
+import { SCRIPT_CATEGORIES } from '@/data/scriptCategories';
 
 interface ScriptLibraryProps {
   onSelectScript: (script: BoilerplateScript) => void;

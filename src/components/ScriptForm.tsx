@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -8,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { toast } from 'sonner';
 import ScriptLibrary from './ScriptLibrary';
 import { BoilerplateScript } from '@/types/scripts';
-import { SCRIPT_CATEGORIES } from '@/data/scriptData';
+import { SCRIPT_CATEGORIES } from '@/data/scriptCategories';
 
 type ScriptFormProps = {
   onScriptGenerated: (script: string) => void;
@@ -103,7 +102,7 @@ echo "Backup completed: $DEST_DIR/$BACKUP_FILE"
       return;
     }
     
-    // In a real app, we would send the description to an API for AI processing
+    // Simulate AI processing
     setTimeout(() => {
       let generatedScript = template.template;
       
