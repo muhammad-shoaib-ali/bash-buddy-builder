@@ -95,8 +95,7 @@ echo "Backup completed: $DEST_DIR/$BACKUP_FILE"
     const template = SCRIPT_TEMPLATES.find(t => t.id === selectedTemplate);
     
     if (!template) {
-      toast({
-        title: "Error",
+      toast("Error", {
         description: "Template not found",
         duration: 3000,
       });
@@ -116,8 +115,7 @@ echo "Backup completed: $DEST_DIR/$BACKUP_FILE"
       onScriptGenerated(generatedScript);
       setIsGenerating(false);
       
-      toast({
-        title: "Script Generated",
+      toast("Script Generated", {
         description: "Your bash script has been created",
         duration: 3000,
       });
@@ -131,8 +129,7 @@ echo "Backup completed: $DEST_DIR/$BACKUP_FILE"
       const scriptData: BoilerplateScript = JSON.parse(data);
       onScriptGenerated(scriptData.template);
       
-      toast({
-        title: "Script Selected",
+      toast("Script Selected", {
         description: `${scriptData.name} script loaded successfully`,
         duration: 3000,
       });
@@ -148,8 +145,7 @@ echo "Backup completed: $DEST_DIR/$BACKUP_FILE"
   const handleSelectScript = (script: BoilerplateScript) => {
     onScriptGenerated(script.template);
     
-    toast({
-      title: "Script Selected",
+    toast("Script Selected", {
       description: `${script.name} script loaded successfully`,
       duration: 3000,
     });
