@@ -133,5 +133,186 @@ fi
 
 exit 0
 `
+  },
+  {
+    id: "docker-export-import",
+    name: "Export/Import Docker Container",
+    description: "Exports a container to a tarball and imports it",
+    category: "docker-management",
+    template: `#!/bin/bash
+
+# Docker Container Export/Import Script
+# Description: Exports and imports Docker containers
+# Usage: ./docker_export_import.sh [export|import] [container_name/image_name] [output_file/input_file]
+
+ACTION=\${1:-"export"}
+TARGET=\${2:-""}
+FILE=\${3:-""}
+
+if [ -z "$TARGET" ]; then
+  echo "Error: No container/image name specified."
+  echo "Usage: $0 [export|import] [container_name/image_name] [output_file/input_file]"
+  exit 1
+fi
+
+case "$ACTION" in
+  export)
+    if [ -z "$FILE" ]; then
+      FILE="$TARGET-export-$(date +%Y%m%d%H%M%S).tar"
+    fi
+    
+    echo "Exporting container $TARGET to $FILE..."
+    docker export "$TARGET" > "$FILE"
+    
+    if [ $? -eq 0 ]; then
+      echo "Container exported successfully to $FILE"
+      echo "File size: $(du -h "$FILE" | cut -f1)"
+    else
+      echo "Error exporting container."
+      exit 1
+    fi
+    ;;
+    
+  import)
+    if [ -z "$FILE" ] || [ ! -f "$FILE" ]; then
+      echo "Error: Input file not specified or doesn't exist."
+      exit 1
+    fi
+    
+    echo "Importing container from $FILE as $TARGET..."
+    cat "$FILE" | docker import - "$TARGET"
+    
+    if [ $? -eq 0 ]; then
+      echo "Container imported successfully as $TARGET"
+      echo "To create a container from this image: docker create --name=container_name $TARGET"
+    else
+      echo "Error importing container."
+      exit 1
+    fi
+    ;;
+    
+  *)
+    echo "Invalid action. Use 'export' or 'import'."
+    exit 1
+    ;;
+esac
+
+exit 0
+`
+  },
+  {
+    id: "docker-resource-usage",
+    name: "Monitor Container Resources",
+    description: "Monitors resource usage of Docker containers",
+    category: "docker-management",
+    template: `#!/bin/bash
+
+# Docker Container Resource Monitoring Script
+# Description: Monitors CPU, memory, and network usage of Docker containers
+# Usage: ./docker_monitor.sh [container_name] [interval_seconds]
+
+CONTAINER=\${1:-""}
+INTERVAL=\${2:-5}
+
+# Check if a specific container was specified
+if [ -n "$CONTAINER" ]; then
+  # Check if container exists
+  if ! docker ps -a --format '{{.Names}}' | grep -q "^$CONTAINER$"; then
+    echo "Error: Container '$CONTAINER' not found."
+    exit 1
+  fi
+  
+  echo "Monitoring resource usage for container: $CONTAINER"
+  echo "Press Ctrl+C to exit."
+  echo "-----------------------------------------"
+  
+  while true; do
+    echo "Time: $(date '+%Y-%m-%d %H:%M:%S')"
+    
+    # Get CPU, memory, and network usage
+    docker stats --no-stream "$CONTAINER"
+    
+    sleep $INTERVAL
+    echo "-----------------------------------------"
+  done
+else
+  # Monitor all running containers
+  echo "Monitoring resource usage for all running containers."
+  echo "Press Ctrl+C to exit."
+  echo "-----------------------------------------"
+  
+  while true; do
+    echo "Time: $(date '+%Y-%m-%d %H:%M:%S')"
+    
+    # Get stats for all running containers
+    docker stats --no-stream
+    
+    sleep $INTERVAL
+    echo "-----------------------------------------"
+  done
+fi
+
+exit 0
+`
+  },
+  {
+    id: "docker-auto-restart",
+    name: "Auto-Restart Failed Containers",
+    description: "Automatically restarts failed Docker containers",
+    category: "docker-management",
+    template: `#!/bin/bash
+
+# Auto-Restart Failed Docker Containers Script
+# Description: Automatically restarts Docker containers that have exited with error
+# Usage: ./docker_auto_restart.sh [max_restarts]
+
+MAX_RESTARTS=\${1:-3}
+
+echo "Starting Docker container health monitor..."
+echo "Max restart attempts: $MAX_RESTARTS"
+echo "Press Ctrl+C to exit."
+echo "-----------------------------------------"
+
+# Get list of containers that have exited with non-zero status
+FAILED_CONTAINERS=$(docker ps -a --filter 'status=exited' --filter 'exited!=0' --format '{{.Names}}')
+
+if [ -z "$FAILED_CONTAINERS" ]; then
+  echo "No failed containers found."
+  exit 0
+fi
+
+echo "Found failed containers:"
+echo "$FAILED_CONTAINERS"
+echo "-----------------------------------------"
+
+# Track restart attempts
+declare -A restart_count
+
+for CONTAINER in $FAILED_CONTAINERS; do
+  # Initialize restart counter if needed
+  if [ -z "${restart_count[$CONTAINER]}" ]; then
+    restart_count[$CONTAINER]=0
+  fi
+  
+  # Check if max restarts reached
+  if [ "${restart_count[$CONTAINER]}" -ge "$MAX_RESTARTS" ]; then
+    echo "⚠️ Container $CONTAINER has reached max restart attempts ($MAX_RESTARTS). Skipping."
+    continue
+  fi
+  
+  echo "Attempting to restart container: $CONTAINER"
+  if docker start "$CONTAINER"; then
+    echo "✅ Container $CONTAINER restarted successfully."
+    restart_count[$CONTAINER]=$((${restart_count[$CONTAINER]}+1))
+    echo "   Restart attempt: ${restart_count[$CONTAINER]}/$MAX_RESTARTS"
+  else
+    echo "❌ Failed to restart container $CONTAINER."
+  fi
+done
+
+echo "-----------------------------------------"
+echo "Container restart process completed."
+exit 0
+`
   }
 ];
