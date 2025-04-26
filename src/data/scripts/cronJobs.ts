@@ -93,8 +93,8 @@ if [ "$MATCHES" -eq 0 ]; then
 fi
 
 # Remove matching lines
-grep -v "$PATTERN" "$TEMP_CRON" > "${TEMP_CRON}.new"
-mv "${TEMP_CRON}.new" "$TEMP_CRON"
+grep -v "$PATTERN" "$TEMP_CRON" > "\${TEMP_CRON}.new"
+mv "\${TEMP_CRON}.new" "$TEMP_CRON"
 
 # Install the new crontab
 crontab -u "$USER" "$TEMP_CRON"

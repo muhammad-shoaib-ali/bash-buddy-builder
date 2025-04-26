@@ -91,7 +91,7 @@ fi
 # Find and archive old log files
 echo "Finding log files older than $DAYS days..."
 COUNT=0
-ARCHIVE_FILE="$ARCHIVE_DIR/logs_older_than_${DAYS}days_${DATE}.tar.gz"
+ARCHIVE_FILE="$ARCHIVE_DIR/logs_older_than_\${DAYS}days_\${DATE}.tar.gz"
 
 # Create a list of files to archive
 FILES_LIST=$(find "$LOG_DIR" -name "*.log*" -o -name "*.gz" -type f -mtime +$DAYS)
