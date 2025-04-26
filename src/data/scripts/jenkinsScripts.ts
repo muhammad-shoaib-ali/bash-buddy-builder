@@ -35,9 +35,9 @@ check_running_jobs() {
   local response
   response=$(curl -s -u "$USERNAME:$API_TOKEN" "$JENKINS_URL/api/json?tree=jobs[name,color]")
   
-  if [[ "$response" == *"color\":\"blue_anime\""* || 
-        "$response" == *"color\":\"yellow_anime\""* || 
-        "$response" == *"color\":\"red_anime\""* ]]; then
+  if [[ "$response" == *"color\\\":\\\"blue_anime\\\"\"* || 
+        "$response" == *"color\\\":\\\"yellow_anime\\\"\"* || 
+        "$response" == *"color\\\":\\\"red_anime\\\"\"* ]]; then
     return 0  # Jobs running
   else
     return 1  # No jobs running
@@ -151,7 +151,7 @@ EXCLUDES=(
 
 # Build the exclude parameters
 EXCLUDE_PARAMS=""
-for item in "${EXCLUDES[@]}"; do
+for item in "\${EXCLUDES[@]}"; do
   EXCLUDE_PARAMS="$EXCLUDE_PARAMS --exclude=$item"
 done
 
@@ -228,8 +228,8 @@ echo "Analyzing jobs for failures..."
 JOBS=$(echo "$JOBS_JSON" | jq -r '.jobs[] | .name + "," + .url')
 
 # Headers for the report
-printf "%-40s %-20s %-30s %-50s\\n" "JOB NAME" "BUILD NUMBER" "DATE" "FAILURE REASON"
-printf "%-40s %-20s %-30s %-50s\\n" "$(printf '%0.s-' {1..40})" "$(printf '%0.s-' {1..20})" "$(printf '%0.s-' {1..30})" "$(printf '%0.s-' {1..50})"
+printf "%-40s %-20s %-30s %-50s\\\\n" "JOB NAME" "BUILD NUMBER" "DATE" "FAILURE REASON"
+printf "%-40s %-20s %-30s %-50s\\\\n" "$(printf '%0.s-' {1..40})" "$(printf '%0.s-' {1..20})" "$(printf '%0.s-' {1..30})" "$(printf '%0.s-' {1..50})"
 
 # Get failed builds for each job
 FOUND_FAILURES=false
@@ -238,7 +238,7 @@ while IFS=',' read -r JOB_NAME JOB_URL; do
   BUILDS_JSON=$(curl -s -u "$USERNAME:$API_TOKEN" "$JOB_URL/api/json?tree=builds[number,timestamp,result,url]")
   
   # Filter and display failed builds
-  FAILED_BUILDS=$(echo "$BUILDS_JSON" | jq -r ".builds[] | select(.result == \"FAILURE\" and .timestamp >= $TIMESTAMP) | [.number, .timestamp, .url] | @csv")
+  FAILED_BUILDS=$(echo "$BUILDS_JSON" | jq -r ".builds[] | select(.result == \\\"FAILURE\\\" and .timestamp >= $TIMESTAMP) | [.number, .timestamp, .url] | @csv")
   
   if [ -n "$FAILED_BUILDS" ]; then
     FOUND_FAILURES=true
@@ -257,7 +257,7 @@ while IFS=',' read -r JOB_NAME JOB_URL; do
       FAILURE_REASON="${FAILURE_REASON:0:50}"  # Truncate to 50 chars
       
       # Print the information
-      printf "%-40s %-20s %-30s %-50s\\n" "$JOB_NAME" "#$BUILD_NUM" "$BUILD_DATE" "$FAILURE_REASON"
+      printf "%-40s %-20s %-30s %-50s\\\\n" "$JOB_NAME" "#$BUILD_NUM" "$BUILD_DATE" "$FAILURE_REASON"
     done <<< "$FAILED_BUILDS"
   fi
 done <<< "$JOBS"
@@ -410,7 +410,7 @@ fi
 JENKINS_URL=$(echo "$JENKINS_URL" | sed 's#/$##')
 
 # URL encode job name for spaces and special characters
-JOB_NAME_ENCODED=$(echo "$JOB_NAME" | sed 's/ /%20/g' | sed 's/\//%2F/g')
+JOB_NAME_ENCODED=$(echo "$JOB_NAME" | sed 's/ /%20/g' | sed 's/\\//%2F/g')
 
 echo "Triggering Jenkins job: $JOB_NAME"
 echo "Jenkins URL: $JENKINS_URL"

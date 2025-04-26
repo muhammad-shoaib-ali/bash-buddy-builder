@@ -254,7 +254,7 @@ read -r -d '' PAYLOAD << EOF
         },
         {
           "title": "Environment",
-          "value": "${ENVIRONMENT:-production}",
+          "value": "\${ENVIRONMENT:-production}",
           "short": true
         }
       ],

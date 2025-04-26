@@ -159,7 +159,7 @@ find "$LOG_DIR" -type f -name "*.log" -size +100M | while read -r logfile; do
   echo "Rotating: $logfile"
   
   # Create archive filename
-  archive_file="$ARCHIVE_DIR/${basename%.log}_$DATE.log.gz"
+  archive_file="$ARCHIVE_DIR/\${basename%.log}_$DATE.log.gz"
   
   # Compress the log file
   cat "$logfile" | gzip > "$archive_file"
@@ -223,7 +223,7 @@ case "$DB_TYPE" in
       exit 1
     fi
     
-    BACKUP_FILE="$BACKUP_DIR/mysql_${DB_NAME}_$DATE.sql.gz"
+    BACKUP_FILE="$BACKUP_DIR/mysql_\${DB_NAME}_$DATE.sql.gz"
     echo "Creating MySQL backup of database '$DB_NAME'..."
     
     # Create the MySQL backup
@@ -246,7 +246,7 @@ case "$DB_TYPE" in
       exit 1
     fi
     
-    BACKUP_FILE="$BACKUP_DIR/postgres_${DB_NAME}_$DATE.sql.gz"
+    BACKUP_FILE="$BACKUP_DIR/postgres_\${DB_NAME}_$DATE.sql.gz"
     echo "Creating PostgreSQL backup of database '$DB_NAME'..."
     
     # Set PostgreSQL environment variables
@@ -269,7 +269,7 @@ esac
 
 # Clean up old backups (keep last 30 days by default)
 echo "Cleaning up old backups (keeping the last 30 days)..."
-find "$BACKUP_DIR" -name "${DB_TYPE}_${DB_NAME}_*.sql.gz" -mtime +30 -delete
+find "$BACKUP_DIR" -name "\${DB_TYPE}_\${DB_NAME}_*.sql.gz" -mtime +30 -delete
 
 echo "Database backup process completed."
 exit 0`
@@ -396,7 +396,7 @@ echo "Press Ctrl+C to exit."
 echo "-------------------------------------------"
 
 # Set up a log file
-LOG_FILE="/tmp/process_monitor_${PROCESS_NAME//[^a-zA-Z0-9]/_}.log"
+LOG_FILE="/tmp/process_monitor_\${PROCESS_NAME//[^a-zA-Z0-9]/_}.log"
 echo "Logging to: $LOG_FILE"
 
 # Function to check if process is running
