@@ -17,7 +17,7 @@ export const logManagementScripts: BoilerplateScript[] = [
 LOGS=("$@")
 
 # If no logs specified, use defaults
-if [ ${#LOGS[@]} -eq 0 ]; then
+if [ $\{#LOGS[@]\} -eq 0 ]; then
   echo "No log files specified, using defaults."
   LOGS=(
     "/var/log/syslog"
@@ -29,7 +29,7 @@ fi
 
 # Filter out non-existent logs
 VALID_LOGS=()
-for LOG in "${LOGS[@]}"; do
+for LOG in "$\{LOGS[@]\}"; do
   if [ -f "$LOG" ]; then
     VALID_LOGS+=("$LOG")
   else
@@ -38,23 +38,23 @@ for LOG in "${LOGS[@]}"; do
 done
 
 # Check if we have valid logs to monitor
-if [ ${#VALID_LOGS[@]} -eq 0 ]; then
+if [ $\{#VALID_LOGS[@]\} -eq 0 ]; then
   echo "Error: No valid log files to monitor."
   exit 1
 fi
 
 echo "Monitoring the following logs in real-time:"
-for LOG in "${VALID_LOGS[@]}"; do
+for LOG in "$\{VALID_LOGS[@]\}"; do
   echo "- $LOG"
 done
 echo "Press Ctrl+C to exit."
 echo "----------------------------------------"
 
 # Start tail with color coding for different logs
-tail -f "${VALID_LOGS[@]}" | awk '
-  /error|ERROR|critical|CRITICAL|fail|FAIL/ {print "\033[31m" $0 "\033[0m"; next}  # Red for errors
-  /warn|WARN|warning|WARNING/ {print "\033[33m" $0 "\033[0m"; next}                # Yellow for warnings
-  /success|SUCCESS/ {print "\033[32m" $0 "\033[0m"; next}                          # Green for success
+tail -f "$\{VALID_LOGS[@]\}" | awk '
+  /error|ERROR|critical|CRITICAL|fail|FAIL/ {print "\\x1b[31m" $0 "\\x1b[0m"; next}  # Red for errors
+  /warn|WARN|warning|WARNING/ {print "\\x1b[33m" $0 "\\x1b[0m"; next}                # Yellow for warnings
+  /success|SUCCESS/ {print "\\x1b[32m" $0 "\\x1b[0m"; next}                          # Green for success
   {print}                                                                         # Default color
 '
 
