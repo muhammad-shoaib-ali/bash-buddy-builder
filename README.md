@@ -1,11 +1,8 @@
-Here’s a professional, SEO-optimized `README.md` for your **BashGenie** DevOps automation tool that’s GitHub-friendly and tailored with top DevOps keywords:
-
----
 
 ```markdown
 # ⚡️ Bash Buddy Builder – AI-Powered DevOps Bash Script Generator
 
-BashGenie is a smart, AI-powered DevOps automation tool that helps cloud engineers, SREs, and sysadmins generate reliable Bash scripts in seconds. Whether you're managing Linux servers, configuring CI/CD pipelines, setting up cron jobs, or deploying Docker containers—BashGenie turns your intent into functional, production-ready Bash scripts.
+Bash Buddy Builder is a smart, AI-powered DevOps automation tool that helps cloud engineers, SREs, and sysadmins generate reliable Bash scripts in seconds. Whether you're managing Linux servers, configuring CI/CD pipelines, setting up cron jobs, or deploying Docker containers—BashGenie turns your intent into functional, production-ready Bash scripts.
 
 ---
 
@@ -50,9 +47,8 @@ BashGenie is a smart, AI-powered DevOps automation tool that helps cloud enginee
 
 ## 🛠️ Tech Stack
 
-- **Frontend:** React.js + Tailwind CSS
+- **Frontend:** React.js + Tailwind CSS Typescript
 - **Backend:** Node.js + Express
-- **AI Integration:** OpenAI API (ChatGPT)
 - **Validation:** ShellCheck API
 - **Container Sandbox:** Docker (for safe script execution)
 - **Database:** PostgreSQL / MongoDB
@@ -64,8 +60,6 @@ BashGenie is a smart, AI-powered DevOps automation tool that helps cloud enginee
 > Try BashGenie in your browser. Generate, validate, and run Bash scripts — no setup required.
 
 ---
-
-## 📈 SEO-Optimized DevOps Keywords
 
 This project includes:
 - DevOps Bash script generator
@@ -84,7 +78,7 @@ This project includes:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/bashgenie.git
+git clone (https://github.com/muhammad-shoaib-ali/bash-buddy-builder.git)
 cd bashgenie
 
 # Install dependencies
@@ -114,4 +108,4 @@ Let’s build the smartest DevOps scripting assistant together.
 
 **Muhammad Shoaib Ali**  
 Cloud Native DevOps Engineer | Founder @ AdOpsify AI  
-🔗 [LinkedIn](https://linkedin.com/in/muhammadshoaibali)
+🔗 [LinkedIn](https://www.linkedin.com/in/muhammad-shoaibali/)
