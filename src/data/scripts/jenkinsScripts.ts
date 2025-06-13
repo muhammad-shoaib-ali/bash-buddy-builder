@@ -254,7 +254,7 @@ while IFS=',' read -r JOB_NAME JOB_URL; do
       # Get the failure reason from the console log (just the first error line for brevity)
       CONSOLE_LOG=$(curl -s -u "$USERNAME:$API_TOKEN" "$BUILD_URL/consoleText")
       FAILURE_REASON=$(echo "$CONSOLE_LOG" | grep -m 1 -E 'ERROR:|FAILURE:|Exception:|failed with exit code')
-      FAILURE_REASON="${FAILURE_REASON:0:50}"  # Truncate to 50 chars
+      FAILURE_REASON = FAILURE_REASON.substring(0, 50);
       
       # Print the information
       printf "%-40s %-20s %-30s %-50s\\\\n" "$JOB_NAME" "#$BUILD_NUM" "$BUILD_DATE" "$FAILURE_REASON"
