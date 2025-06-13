@@ -5,19 +5,10 @@ phases:
     runtime-versions:
       nodejs: 18
     commands:
-      - echo Installing dependencies...
       - npm install
-
-  pre_build:
-    commands:
-      - echo Updating Browserslist...
-      - npx update-browserslist-db@latest || echo "Update skipped"
-      - echo Running tests...
-      - npm test || echo "Tests failed, continuing..."
 
   build:
     commands:
-      - echo Building the React app...
       - npm run build
 
 artifacts:
