@@ -1,50 +1,36 @@
 version: 2.1
-orbs:
-  node: circleci/node@5
+executors:
+  node-executor:
+    docker:
+      - image: cimg/node:18.20.2
+    working_directory: ~/project
 jobs:
-  build-node:
-    executor: node/default
+  test-playwright:
+    executor: node-executor
     steps:
       - checkout
-      - node/install-packages:
-          pkg-manager: npm
+      - restore_cache:
+          keys:
+            - npm-cache-{{ checksum "package-lock.json" }}
+            - npm-cache-
       - run:
-          command: npm run build
-      - run:
-          name: Create the ~/artifacts directory if it doesn't exist
-          command: mkdir -p ~/artifacts
-      - run:
-          name: Copy artifacts
-          command: cp -R build dist public .output .next .docusaurus ~/artifacts 2>/dev/null || true
-      - store_artifacts:
-          path: ~/artifacts
-          destination: node-build
-  e2e-tests:
-    executor: node/default
-    steps:
-      - checkout
-      - node/install-packages:
-          pkg-manager: npm
+          name: Install dependencies
+          command: npm ci
+      - save_cache:
+          key: npm-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ~/.npm
       - run:
           name: Install Playwright Browsers
           command: npx playwright install --with-deps
       - run:
-          name: Run Playwright E2E Tests
+          name: Run Playwright tests
           command: npx playwright test
       - store_artifacts:
-          path: playwright-report
-          destination: playwright-report
-  deploy:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - run:
-          name: deploy
-          command: '#e.g. ./deploy.sh'
+          path: test-results
+          destination: test-results
 workflows:
-  build:
+  version: 2
+  test:
     jobs:
-      - build-node
-      - e2e-tests:
-          requires:
-            - build-node
+      - test-playwright
