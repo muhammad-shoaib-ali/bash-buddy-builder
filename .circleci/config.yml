@@ -24,6 +24,10 @@ jobs:
           name: Install Playwright Browsers
           command: npx playwright install --with-deps
       - run:
+          name: Create Playwright config to use root directory
+          command: |
+            echo "module.exports = { testDir: '.' }" > playwright.config.js
+      - run:
           name: Run Playwright tests
           command: npx playwright test
       - store_artifacts:
