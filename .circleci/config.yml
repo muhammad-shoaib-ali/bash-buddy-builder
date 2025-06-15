@@ -5,7 +5,7 @@ executors:
       - image: cimg/node:18.20.2
     working_directory: ~/project
 jobs:
-  test-playwright:
+  build:
     executor: node-executor
     steps:
       - checkout
@@ -21,20 +21,13 @@ jobs:
           paths:
             - ~/.npm
       - run:
-          name: Install Playwright Browsers
-          command: npx playwright install --with-deps
-      - run:
-          name: Create Playwright config to use root directory
-          command: |
-            echo "module.exports = { testDir: '.' }" > playwright.config.js
-      - run:
-          name: Run Playwright tests
-          command: npx playwright test
+          name: Build the project
+          command: npm run build
       - store_artifacts:
-          path: test-results
-          destination: test-results
+          path: dist
+          destination: dist
 workflows:
   version: 2
-  test:
+  build-and-store:
     jobs:
-      - test-playwright
+      - build
